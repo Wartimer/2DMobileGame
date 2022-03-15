@@ -58,13 +58,13 @@ namespace Game.InputLogic
         private void SetActive(bool active) =>
             _container.alpha = active ? _enabledAlpha : _disabledAlpha;
 
-        private void Move()
+        private void Move(float deltaTime)
         {
             if (!_usingJoystick)
                 return;
 
             float axisOffset = CrossPlatformInputManager.GetAxis("Horizontal");
-            float moveValue = _speed * _inputMultiplier * Time.deltaTime * axisOffset;
+            float moveValue = _speed * _inputMultiplier * deltaTime * axisOffset;
 
             float abs = Mathf.Abs(moveValue);
             float sign = Mathf.Sign(moveValue);

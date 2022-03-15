@@ -12,7 +12,7 @@ public class ExampleEventUpdate : MonoBehaviour {
         UpdateManager.UnsubscribeFromUpdate(EventUpdate);
     }
 
-    private void EventUpdate() {
+    private void EventUpdate(float deltaTime) {
         i++;
     }
 }

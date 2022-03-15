@@ -16,10 +16,10 @@ namespace Game.InputLogic
             UpdateManager.UnsubscribeFromUpdate(Move);
 
 
-        private void Move()
+        private void Move(float deltaTime)
         {
             float axisOffset = CrossPlatformInputManager.GetAxis("Horizontal");
-            float moveValue = _inputMultiplier * Time.deltaTime * axisOffset;
+            float moveValue = _inputMultiplier * deltaTime * axisOffset;
 
             float abs = Mathf.Abs(moveValue);
             float sign = Mathf.Sign(moveValue);

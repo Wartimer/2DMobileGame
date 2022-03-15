@@ -1,4 +1,5 @@
 ﻿using System;
+using UnityEngine;
 
 /// <summary>
 /// Made by Feiko Joosten
@@ -18,13 +19,13 @@ namespace JoostenProductions {
         // If someone needs this on scene switch, it'll be recreated. Will have to add proper cleanup support in case this is set to true
         protected override bool DoNotDestroyOnLoad { get { return false; } }
 
-        private static event Action OnUpdateEvent;
+        private static event Action<float> OnUpdateEvent;
         private static event Action OnFixedUpdateEvent;
         private static event Action OnLateUpdateEvent;
 
         private static readonly Type overridableMonoBehaviourType = typeof(OverridableMonoBehaviour);
 
-        public static void SubscribeToUpdate(Action callback) {
+        public static void SubscribeToUpdate(Action<float> callback) {
             if(Instance == null) return;
 
             OnUpdateEvent += callback;
@@ -42,7 +43,7 @@ namespace JoostenProductions {
             OnLateUpdateEvent += callback;
         }
 
-        public static void UnsubscribeFromUpdate(Action callback) {
+        public static void UnsubscribeFromUpdate(Action<float> callback) {
             OnUpdateEvent -= callback;
         }
 
@@ -109,8 +110,10 @@ namespace JoostenProductions {
             UnsubscribeFromLateUpdate(behaviour.LateUpdateMe);
         }
 
-        private void Update() {
-            if(OnUpdateEvent != null) OnUpdateEvent.Invoke();
+        private void Update()
+        {
+            var deltaTime = Time.deltaTime;
+            if(OnUpdateEvent != null) OnUpdateEvent.Invoke(deltaTime);
         }
 
         private void FixedUpdate() {

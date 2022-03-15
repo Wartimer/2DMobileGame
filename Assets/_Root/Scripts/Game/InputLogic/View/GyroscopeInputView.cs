@@ -25,7 +25,7 @@ namespace Game.InputLogic
             UpdateManager.UnsubscribeFromUpdate(Move);
 
 
-        private void Move()
+        private void Move(float deltaTime)
         {
             if (!SystemInfo.supportsGyroscope)
                 return;
@@ -34,7 +34,7 @@ namespace Game.InputLogic
             quaternion.Normalize();
 
             float offset = quaternion.x + quaternion.y;
-            float moveValue = _speed * _inputMultiplier * Time.deltaTime * offset;
+            float moveValue = _speed * _inputMultiplier * deltaTime * offset;
 
             float abs = Mathf.Abs(moveValue);
             float sign = Mathf.Sign(moveValue);
