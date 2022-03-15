@@ -9,23 +9,21 @@ namespace Game.TapeBackground
 
         private ISubscriptionProperty<float> _diff;
 
-
         public void Init(ISubscriptionProperty<float> diff)
         {
             _diff = diff;
             _diff.SubscribeOnChange(Move);
         }
 
-        private void OnDestroy()
-        {
-            _diff?.UnSubscribeOnChange(Move);
-        }
-
-
         private void Move(float value)
         {
             foreach (var background in _backgrounds)
                 background.Move(-value);
+        }
+        
+        private void OnDestroy()
+        {
+            _diff?.UnSubscribeOnChange(Move);
         }
     }
 }

@@ -5,7 +5,7 @@ namespace Game.TapeBackground
 {
     internal class TapeBackgroundController : BaseController
     {
-        private readonly ResourcePath _viewPath = new ResourcePath("Prefabs/Background");
+        private readonly ResourcePath _viewPath = new ResourcePath("Prefabs/Stage/Background");
 
         private readonly SubscriptionProperty<float> _diff;
         private readonly ISubscriptionProperty<float> _leftMove;
@@ -29,14 +29,7 @@ namespace Game.TapeBackground
             _leftMove.SubscribeOnChange(MoveLeft);
             _rightMove.SubscribeOnChange(MoveRight);
         }
-
-        protected override void OnDispose()
-        {
-            _leftMove.UnSubscribeOnChange(MoveLeft);
-            _rightMove.UnSubscribeOnChange(MoveRight);
-        }
-
-
+        
         private TapeBackgroundView LoadView()
         {
             GameObject prefab = ResourcesLoader.LoadPrefab(_viewPath);
@@ -51,5 +44,11 @@ namespace Game.TapeBackground
 
         private void MoveRight(float value) =>
             _diff.Value = value;
+
+        protected override void OnDispose()
+        {
+            _leftMove.UnSubscribeOnChange(MoveLeft);
+            _rightMove.UnSubscribeOnChange(MoveRight);
+        }
     }
 }

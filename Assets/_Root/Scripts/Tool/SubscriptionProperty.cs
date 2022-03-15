@@ -16,8 +16,7 @@ namespace Tool
                 _onChangeValue?.Invoke(_value);
             }
         }
-
-
+        
         public void SubscribeOnChange(Action<TValue> subscriptionAction) =>
             _onChangeValue += subscriptionAction;
 

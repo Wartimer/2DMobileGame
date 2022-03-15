@@ -7,17 +7,17 @@ namespace Profile
     {
         public readonly SubscriptionProperty<GameState> CurrentState;
         public readonly CarModel CurrentCar;
+        internal CarType CarType;
 
-
-        public ProfilePlayer(float speedCar, GameState initialState) : this(speedCar)
+        public ProfilePlayer(float carSpeed, GameState initialState) : this(carSpeed)
         {
             CurrentState.Value = initialState;
         }
 
-        public ProfilePlayer(float speedCar)
+        public ProfilePlayer(float carSpeed)
         {
             CurrentState = new SubscriptionProperty<GameState>();
-            CurrentCar = new CarModel(speedCar);
+            CurrentCar = new CarModel(carSpeed);
         }
     }
 }
