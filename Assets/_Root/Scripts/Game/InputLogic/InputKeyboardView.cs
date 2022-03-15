@@ -12,10 +12,10 @@ namespace Game.InputLogic
             UpdateManager.UnsubscribeFromUpdate(GetAxis);
 
 
-        private void GetAxis()
+        private void GetAxis(float deltaTime)
         {
             float axisOffset = Input.GetAxis("Horizontal");
-            float moveValue = _speed * Time.deltaTime * axisOffset;
+            float moveValue = _speed * deltaTime * axisOffset;
 
             float abs = Mathf.Abs(moveValue);
             float sign = Mathf.Sign(moveValue);

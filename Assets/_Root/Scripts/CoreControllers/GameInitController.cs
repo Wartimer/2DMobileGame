@@ -2,13 +2,15 @@ using Game.Car;
 using Game.InputLogic;
 using Game.TapeBackground;
 using Profile;
+using Services.Analytics;
+using Services.Analytics.UnityAnalytics;
 using Tool;
 
 namespace Game
 {
     internal class GameInitController : BaseController
     {
-        public GameInitController(ProfilePlayer profilePlayer)
+        public GameInitController(ProfilePlayer profilePlayer, AnalyticsManager analyticsManager)
         {
             var leftMoveDiff = new SubscriptionProperty<float>();
             var rightMoveDiff = new SubscriptionProperty<float>();
@@ -28,6 +30,7 @@ namespace Game
                     AddController(new WheelsInitController(new SchoolBusInitController().Car, leftMoveDiff, rightMoveDiff));
                     break;
             }
+            analyticsManager.SendStageStarted();
             
         }
     }

@@ -11,7 +11,7 @@ namespace Game.TapeBackground
         public void Move(float value)
         {
             Vector3 position = transform.position;
-            position += Vector3.right * value * _relativeSpeedRate;
+            position += Vector3.right * (value * _relativeSpeedRate);
 
             if (position.x <= _leftBorder)
                 position.x = _rightBorder - (_leftBorder - position.x);

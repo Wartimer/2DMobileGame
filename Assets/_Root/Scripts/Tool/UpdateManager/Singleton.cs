@@ -10,7 +10,7 @@ namespace JoostenProductions {
 
         private static readonly System.Type instanceType = typeof(T);
 
-        public static T Instance {
+        protected static T Instance {
             get {
                 if(isShuttingDown) {
                     Debug.LogWarning("Tried to access " + instanceType.Name + " while the application is going to quit! This is not allowed.");

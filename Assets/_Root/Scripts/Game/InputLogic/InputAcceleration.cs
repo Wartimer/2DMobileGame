@@ -15,7 +15,7 @@ namespace Game.InputLogic
             UpdateManager.UnsubscribeFromUpdate(Move);
 
 
-        private void Move()
+        private void Move(float deltaTime)
         {
             Vector3 direction = CalcDirection();
             float moveValue = _speed * _inputMultiplier * Time.deltaTime * direction.x;

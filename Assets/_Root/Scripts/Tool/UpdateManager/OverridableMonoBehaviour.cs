@@ -19,7 +19,7 @@ namespace JoostenProductions {
         /// If your class does not use the OnEnable or OnDisable function, this object will be added to the UpdateManager automatically.
         /// Do not forget to replace your Update function with public override void UpdateMe()
         /// </summary>
-        public virtual void UpdateMe() {
+        public virtual void UpdateMe(float deltaTime) {
         }
 
         /// <summary>
