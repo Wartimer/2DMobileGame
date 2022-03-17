@@ -19,10 +19,7 @@ namespace Services.Analytics
 
         private void Awake()
         {
-            _services = new IAnalyticsService[]
-            {
-                new UnityAnalyticsService()
-            };
+
             
         }
 
@@ -62,6 +59,10 @@ namespace Services.Analytics
         internal void AnalyticsInit(ProfilePlayer profilePlayer)
         {
             _profilePlayer = profilePlayer;
+            _services = new IAnalyticsService[]
+            {
+                new UnityAnalyticsService()
+            };
             Initialized = true;
             IsInitialized?.Invoke();
         }

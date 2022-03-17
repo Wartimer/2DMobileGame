@@ -348,6 +348,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 24ca1b58ca454364ba7f79d806ec973e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  _inputMultiplier: 10
 --- !u!114 &449385258921805012
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -362,6 +363,9 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _joystick: {fileID: 2722414625681829516}
   _container: {fileID: 6992499268536425143}
+  _enabledAlpha: 1
+  _disabledAlpha: 0
+  _inputMultiplier: 10
 --- !u!1 &2722414625692556134
 GameObject:
   m_ObjectHideFlags: 0

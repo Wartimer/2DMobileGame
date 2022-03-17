@@ -407,6 +407,7 @@ MonoBehaviour:
   <PurchaseFailed>k__BackingField:
     m_PersistentCalls:
       m_Calls: []
+  <_analyticsManager>k__BackingField: {fileID: 0}
 --- !u!1 &1413551092
 GameObject:
   m_ObjectHideFlags: 0

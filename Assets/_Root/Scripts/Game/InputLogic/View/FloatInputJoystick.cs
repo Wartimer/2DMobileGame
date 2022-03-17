@@ -28,7 +28,7 @@ namespace Game.InputLogic
 
         public void OnPointerDown(PointerEventData eventData)
         {
-            _joystick.transform.position = eventData.position;
+            _joystick.transform.position = (eventData.position);
             _joystick.SetStartPosition(eventData.position);
             _joystick.OnPointerDown(eventData);
             StartUsing();
@@ -57,6 +57,7 @@ namespace Game.InputLogic
 
         private void SetActive(bool active) =>
             _container.alpha = active ? _enabledAlpha : _disabledAlpha;
+
 
         private void Move(float deltaTime)
         {

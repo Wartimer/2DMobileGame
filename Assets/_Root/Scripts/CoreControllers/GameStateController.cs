@@ -54,7 +54,7 @@ internal class GameStateController : BaseController
                 break;
             case GameState.Game:
                 DisposeAllControllers();
-                _gameInitController = new GameInitController(_profilePlayer, _analyticsManager);
+                _gameInitController = new GameInitController(_profilePlayer, _analyticsManager, _placeForUi);
                 break;
             case GameState.SelectCar:
                 DisposeAllControllers();
