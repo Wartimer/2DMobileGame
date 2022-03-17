@@ -1,16 +1,16 @@
+using Tool;
+using Profile;
 using Game.Car;
+using UnityEngine;
 using Game.InputLogic;
 using Game.TapeBackground;
-using Profile;
 using Services.Analytics;
-using Services.Analytics.UnityAnalytics;
-using Tool;
 
 namespace Game
 {
     internal class GameInitController : BaseController
     {
-        public GameInitController(ProfilePlayer profilePlayer, AnalyticsManager analyticsManager)
+        public GameInitController(ProfilePlayer profilePlayer, AnalyticsManager analyticsManager, Transform placeForUi)
         {
             var leftMoveDiff = new SubscriptionProperty<float>();
             var rightMoveDiff = new SubscriptionProperty<float>();
