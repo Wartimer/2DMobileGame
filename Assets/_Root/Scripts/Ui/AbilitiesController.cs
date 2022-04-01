@@ -1,8 +1,9 @@
 using System;
 using System.Collections.Generic;
+using Features.AbilitySystem;
 using JetBrains.Annotations;
 
-namespace Features.AbilitySystem
+namespace Ui
 {
     internal class AbilitiesController : BaseController, IAbilitiesController
     {
@@ -37,7 +38,6 @@ namespace Features.AbilitySystem
             _view.Clear();
             base.OnDispose();
         }
-
 
         private void OnAbilityViewClicked(string abilityId)
         {

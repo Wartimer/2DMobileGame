@@ -1,9 +1,10 @@
 using System;
 using System.Collections.Generic;
 using AbilitySystem.Abilities;
+using Features.AbilitySystem;
 using UnityEngine;
 
-namespace Features.AbilitySystem
+namespace Ui
 {
     internal class AbilitiesView : MonoBehaviour, IAbilitiesView
     {

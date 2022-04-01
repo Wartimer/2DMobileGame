@@ -17,15 +17,7 @@ namespace Game.InputLogic
             Input.gyro.enabled = true;
         }
 
-
-        private void Start() =>
-            UpdateManager.SubscribeToUpdate(Move);
-
-        private void OnDestroy() =>
-            UpdateManager.UnsubscribeFromUpdate(Move);
-
-
-        private void Move(float deltaTime)
+        protected override void Move(float deltaTime)
         {
             if (!SystemInfo.supportsGyroscope)
                 return;
