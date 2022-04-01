@@ -1,4 +1,5 @@
-using Profile;
+using Game.Transport;
+using Scripts.Enums;
 using Tool;
 using UnityEngine;
 using Object = UnityEngine.Object;
@@ -10,6 +11,7 @@ namespace Ui
         private readonly ResourcePath _carSelectView = new ResourcePath("Prefabs/UI/selectCarMenu");
         private readonly ProfilePlayer _profilePlayer;
         private readonly CarSelectView _view;
+        private TransportCharacteristicsFactory _transportCharFactory;
 
 
         public CarSelectController(Transform placeForUi, ProfilePlayer profilePlayer)
@@ -20,6 +22,8 @@ namespace Ui
             _view.StartGameInit(StartGame);
             _view.SelectRedCar(SetRedCar);
             _view.SelectSchoolBus(SetSchoolBus);
+            _view.OpenUpgradesInit(OpenShed);
+            _transportCharFactory = new TransportCharacteristicsFactory();
         }
 
 
@@ -31,22 +35,22 @@ namespace Ui
 
             return objectView.GetComponent<CarSelectView>();
         }
-
-        private void SetSchoolBus()
+        private void MainMenu() =>
+            _profilePlayer.CurrentState.Value = GameState.Start;
+        
+        private void OpenShed()
         {
-            _profilePlayer.CarType = CarType.SchoolBus;
-            PrintText(_profilePlayer.CarType.ToString());
+            if (_profilePlayer.CurrentTransport.Type == TransportType.None)
+            {
+                PrintText("Select your car");
+                return;
+            }
+            _profilePlayer.CurrentState.Value = GameState.Shed;
         }
         
-        private void SetRedCar(){
-            
-            _profilePlayer.CarType = CarType.RedCar;
-            PrintText(_profilePlayer.CarType.ToString());
-        }
-
         private void StartGame()
         {
-            if (_profilePlayer.CarType == CarType.None)
+            if (_profilePlayer.CurrentTransport.Type == TransportType.None)
             {
                 PrintText("Select your car");
                 return;
@@ -54,8 +58,26 @@ namespace Ui
             _profilePlayer.CurrentState.Value = GameState.Game;
         }
 
-        private void MainMenu() =>
-            _profilePlayer.CurrentState.Value = GameState.Start;
+        private void SetSchoolBus()
+        {
+            SetTransportStats(TransportType.SchoolBus);
+            PrintText(_profilePlayer.CurrentTransport.Type.ToString());
+        }
+
+
+        private void SetRedCar(){
+            
+            SetTransportStats(TransportType.RedJeep);
+            PrintText(_profilePlayer.CurrentTransport.Type.ToString());
+        }
+
+
+        private void SetTransportStats(TransportType type)
+        {
+            _profilePlayer.CurrentTransport.SetTransportType(type);
+            _profilePlayer.CurrentTransport.TransportModelInit(_transportCharFactory.GetTransportCharacteristics(type).Speed,
+                    _transportCharFactory.GetTransportCharacteristics(type).JumpHeight);
+        }
 
         private void PrintText(string text)
         {

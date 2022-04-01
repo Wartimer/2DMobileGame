@@ -1,0 +1,27 @@
+using System.Collections.Generic;
+using _Root.Scripts;
+using Scripts.Enums;
+
+namespace Features.AbilitySystem
+{
+    internal interface IAbilitiesRepository : IRepository
+    {
+        IReadOnlyDictionary<string, IAbility> Items { get; }
+    }
+
+    internal class AbilitiesRepository : Repository<string, IAbility, IAbilityItem>, IAbilitiesRepository
+    {
+        public AbilitiesRepository(IEnumerable<IAbilityItem> abilityItems) : base(abilityItems)
+        { }
+
+        protected override string GetKey(IAbilityItem abilityItem) => abilityItem.Id;
+
+        protected override IAbility CreateItem(IAbilityItem abilityItem) =>
+            abilityItem.Type switch
+            {
+                AbilityType.Gun => new GunAbility(abilityItem),
+                AbilityType.Jump => new JumpAbility(abilityItem),
+                _ => StubAbility.Default
+            };
+    }
+}

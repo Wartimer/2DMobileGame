@@ -1,3 +1,4 @@
+using System.Threading.Tasks;
 using UnityEngine;
 
 namespace Game.TapeBackground
@@ -18,7 +19,6 @@ namespace Game.TapeBackground
 
             else if (position.x >= _rightBorder)
                 position.x = _leftBorder + (_rightBorder - position.x);
-
             transform.position = position;
         }
     }

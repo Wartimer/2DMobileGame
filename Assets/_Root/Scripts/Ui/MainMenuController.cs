@@ -1,4 +1,4 @@
-using Profile;
+using Scripts.Enums;
 using Services.Ads;
 using Services.Analytics;
 using Services.IAP;
@@ -32,7 +32,7 @@ namespace Ui
             _view = LoadView(placeForUi);
             
             _view.CarSelectInit(CarSelect);
-            _view.OpenSettingsInit(Settings);
+            _view.OpenSettingsInit(OpenSettings);
             _view.ShowAdsInit(_unityAdsService.RewardedPlayer.Play);
             _view.BuySmthBtnInit(BuyItem0);
         }
@@ -49,9 +49,9 @@ namespace Ui
         private void CarSelect() =>
             _profilePlayer.CurrentState.Value = GameState.SelectCar;
 
-        private void Settings() =>
+        private void OpenSettings() =>
             _profilePlayer.CurrentState.Value = GameState.Settings;
-
+        
         private void BuyItem0() =>
             _iapService.Buy(_productLibrary.Products[0].Id);
 

@@ -9,13 +9,13 @@ namespace Services.IAP
     {
         [Header("Components")]
         [SerializeField] private ProductLibrary _productLibrary;
+        [field: SerializeField] public AnalyticsManager AnalyticsManager { get; private set; }
 
         [field: Header("Events")]
         [field: SerializeField] public UnityEvent Initialized { get; private set; }
         [field: SerializeField] public UnityEvent PurchaseSucceed { get; private set; }
         [field: SerializeField] public UnityEvent PurchaseFailed { get; private set; }
         
-        [field: SerializeField] public AnalyticsManager _analyticsManager { get; private set; }
         public bool IsInitialized { get; private set; }
 
         private IExtensionProvider _extensionProvider;
@@ -35,7 +35,7 @@ namespace Services.IAP
             foreach (Product product in _productLibrary.Products)
                 builder.AddProduct(product.Id, product.ProductType);
             
-            _analyticsManager = FindObjectOfType<AnalyticsManager>();
+            AnalyticsManager = FindObjectOfType<AnalyticsManager>();
             Log("Products initialized");
             UnityPurchasing.Initialize(this, builder);
         }
@@ -88,9 +88,9 @@ namespace Services.IAP
         private void OnPurchaseSucceed(UnityEngine.Purchasing.Product product)
         {
             string productId = product.definition.id;
-            // decimal amount = (decimal)product.definition.payout.quantity;
-            // string currency = product.metadata.isoCurrencyCode;
-            _analyticsManager.SendTransaction(productId, 1, "RUB");
+            decimal amount = (decimal)product.definition.payout.quantity;
+            string currency = product.metadata.isoCurrencyCode;
+            AnalyticsManager.SendTransaction(productId, amount, currency);
             
             Log($"Purchased: {productId}");
             PurchaseSucceed?.Invoke();

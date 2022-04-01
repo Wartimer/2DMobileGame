@@ -1,6 +1,6 @@
 using System;
 using System.Collections.Generic;
-using Profile;
+using Scripts.Enums;
 using Services.Analytics.UnityAnalytics;
 using UnityEngine;
 
@@ -16,22 +16,17 @@ namespace Services.Analytics
         private ProfilePlayer _profilePlayer;
         
         internal bool Initialized { get; private set; }
-
-        private void Awake()
-        {
-
-            
-        }
-
+        
         public void SendMainMenuOpened() =>
             SendEvent("MainMenuOpened");
 
         
-        public void SendStageStarted()
+        public void SendGameStarted()
         {
             SendEvent("StageStarted", new Dictionary<string, object>()
             {
-                {_profilePlayer.CarType.ToString(), DateTime.Now.ToString("hh:mm:ss")}  
+                {"CarType", _profilePlayer.CurrentTransport.Type.ToString()},
+                {"TimeStamp", DateTime.Now.ToString("hh:mm:ss")}  
             });
             Logging("Stage started event sent");
         }

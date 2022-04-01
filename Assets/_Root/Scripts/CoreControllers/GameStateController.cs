@@ -1,6 +1,6 @@
 using Ui;
 using Game;
-using Profile;
+using Scripts.Enums;
 using Services.Ads;
 using Services.Analytics;
 using Services.IAP;
@@ -14,13 +14,14 @@ internal class GameStateController : BaseController
     private MainMenuController _mainMenuController;
     private SettingsMenuController _settingsMenuController;
     private CarSelectController _carSelectController;
+    private ShedController _shedController;
     
     private GameInitController _gameInitController;
     private AnalyticsManager _analyticsManager;
     private IAdsService _unityAdsService;
     private IIAPService _iapService;
     private ProductLibrary _productLibrary;
-    private CarType _carType;
+    private TransportType _transportType;
 
     public GameStateController(
                                 Transform placeForUi, 
@@ -42,23 +43,24 @@ internal class GameStateController : BaseController
 
     private void OnChangeGameState(GameState state)
     {
+        DisposeAllControllers();
+        
         switch (state)
         {
             case GameState.Start:
-                DisposeAllControllers();
                 _mainMenuController = new MainMenuController(_placeForUi, _profilePlayer, _unityAdsService, _iapService, _productLibrary);
                 break;
             case GameState.Settings:
-                DisposeAllControllers();
                 _settingsMenuController = new SettingsMenuController(_placeForUi, _profilePlayer);
                 break;
             case GameState.Game:
-                DisposeAllControllers();
                 _gameInitController = new GameInitController(_profilePlayer, _analyticsManager, _placeForUi);
                 break;
             case GameState.SelectCar:
-                DisposeAllControllers();
                 _carSelectController = new CarSelectController(_placeForUi, _profilePlayer);
+                break;
+            case GameState.Shed:
+                _shedController = new ShedController(_placeForUi, _profilePlayer);
                 break;
             default:
                 DisposeAllControllers();
@@ -72,6 +74,7 @@ internal class GameStateController : BaseController
         _gameInitController?.Dispose();
         _settingsMenuController?.Dispose();
         _carSelectController?.Dispose();
+        _shedController?.Dispose();
     }
     
     protected override void OnDispose()

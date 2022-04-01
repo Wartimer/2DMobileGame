@@ -1,23 +1,23 @@
-using Game.Car;
+using Inventory.Items;
+using Game.Car.TransportRepository;
+using Game.Transport;
 using Tool;
 
-namespace Profile
+namespace Scripts.Enums
 {
     internal class ProfilePlayer
     {
         public readonly SubscriptionProperty<GameState> CurrentState;
-        public readonly CarModel CurrentCar;
-        internal CarType CarType;
+        private TransportModel _currentTransport;
+        public readonly InventoryModel Inventory;
 
-        public ProfilePlayer(float carSpeed, GameState initialState) : this(carSpeed)
-        {
-            CurrentState.Value = initialState;
-        }
+        internal TransportModel CurrentTransport => _currentTransport;
 
-        public ProfilePlayer(float carSpeed)
+        public ProfilePlayer(GameState initialState)
         {
-            CurrentState = new SubscriptionProperty<GameState>();
-            CurrentCar = new CarModel(carSpeed);
+            CurrentState = new SubscriptionProperty<GameState>(initialState);
+            _currentTransport = new TransportModel();
+            Inventory = new InventoryModel();
         }
     }
 }

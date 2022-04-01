@@ -8,8 +8,9 @@ namespace Ui
     {
         [SerializeField] private Button _buttonStart;
         [SerializeField] private Button _buttonSettings;
-        [SerializeField] private Button _buttonShowRewarderAds;
+        
         [SerializeField] private Button _buttonBuySmthng;
+        [SerializeField] private Button _buttonShowRewarderAds;
 
 
         public void CarSelectInit(UnityAction startGame) =>
@@ -18,19 +19,23 @@ namespace Ui
         public void OpenSettingsInit(UnityAction openSettings) =>
             _buttonSettings.onClick.AddListener(openSettings);
 
-        public void ShowAdsInit(UnityAction showRewarded) =>
-            _buttonShowRewarderAds.onClick.AddListener(showRewarded);
+
 
         public void BuySmthBtnInit(UnityAction buySmth)
         {
             _buttonBuySmthng.onClick.AddListener(buySmth);
         }
         
+        public void ShowAdsInit(UnityAction showRewarded) =>
+            _buttonShowRewarderAds.onClick.AddListener(showRewarded);
+        
         public void OnDestroy() {
 
             _buttonStart.onClick.RemoveAllListeners();
             _buttonSettings.onClick.RemoveAllListeners();
+            _buttonBuySmthng.onClick.RemoveAllListeners();
             _buttonShowRewarderAds.onClick.RemoveAllListeners();
+            
         }
 }
 }
