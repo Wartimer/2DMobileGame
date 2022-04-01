@@ -2,6 +2,7 @@ using Scripts.Enums;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using Inventory.Items;
 using UnityEngine;
 using Shed.Upgrade;
 using JetBrains.Annotations;
@@ -16,12 +17,16 @@ namespace Ui
 
     internal class ShedController : BaseController, IShedController
     {
-        private readonly ResourcePath _viewPath = new ResourcePath("Prefabs/UI/ShedView");
-        private readonly ResourcePath _dataSourcePath = new ResourcePath("Configs/Upgrades/UpgradeItemConfigDataSource");
         
-        private readonly ShedView _view;
+        private readonly ResourcePath _upgradeHandlersDataSourcePath = new ResourcePath("Configs/Upgrades/UpgradeItemConfigDataSource");
+        private readonly ResourcePath _itemsConfigDataSourcePath = new ResourcePath("Configs/Inventory/ItemConfigDataSource");
+        private readonly ResourcePath _invetoryViewPath = new ResourcePath("Prefabs/UI/InventoryView");
+        private readonly ResourcePath _shedViewPath = new ResourcePath("Prefabs/UI/ShedView");
+        
+        private readonly ShedView _shedView;
+        private readonly IInventoryView _inventoryView;
         private readonly ProfilePlayer _profilePlayer;
-        private readonly InventoryController _inventoryController;
+        private readonly IInventoryController _inventoryController;
         private readonly IUpgradeHandlersRepository _upgradeHandlersRepository;
         private readonly List<string> _appliedItems = new List<string>();
 
@@ -35,43 +40,27 @@ namespace Ui
             _profilePlayer
                 = profilePlayer ?? throw new ArgumentNullException(nameof(profilePlayer));
 
-            _upgradeHandlersRepository = CreateRepository();
-            _inventoryController = CreateInventoryController(placeForUi);
-
-            _view = LoadView(placeForUi);
+            _upgradeHandlersRepository = CreateUpgradeHandlersRepository();
+            AddRepository(_upgradeHandlersRepository);
             
-            _view.Init(Apply, Close, StartGame);
-        }
+            _inventoryController = CreateInventoryController(placeForUi);
+            AddController(_inventoryController as BaseController);
 
-        private IUpgradeHandlersRepository CreateRepository()
-        {
-            UpgradeItemConfig[] upgradeConfigs = ContentDataSourceLoader.LoadUpgradeItemConfigs(_dataSourcePath);
-            var repository = new UpgradeHandlersRepository(upgradeConfigs);
-            AddRepository(repository);
-
-            return repository;
-        }
-
-        private InventoryController CreateInventoryController(Transform placeForUi)
-        {
-            var inventoryController = new InventoryController(placeForUi, _profilePlayer.Inventory);
-            AddController(inventoryController);
-
-            return inventoryController;
+            _shedView = LoadShedView(placeForUi);
+            _shedView.Init(Apply, Close, StartGame);
         }
 
         protected override void OnDispose()
         {
-            _view.Deinit();
+            _shedView.Deinit();
             base.OnDispose();
         }
-
 
         private void Apply()
         {
             if (_appliedItems.Count == _profilePlayer.Inventory.EquippedItems.Count)
             {
-                _view.Print("All Items Applied. Start the game");
+                _shedView.Print("All Items Applied. Start the game");
                 return;
             }
             
@@ -80,7 +69,7 @@ namespace Ui
                 _profilePlayer.Inventory.EquippedItems,
                 _upgradeHandlersRepository.Items);
 
-            _view.Print("Apply. " +
+            _shedView.Print("Apply. " +
                         $"Current Speed: {_profilePlayer.CurrentTransport.Speed}. " +
                         $"Current Jump Height: {_profilePlayer.CurrentTransport.JumpHeight}");
 
@@ -94,10 +83,8 @@ namespace Ui
                 $"Current Jump Height: {_profilePlayer.CurrentTransport.JumpHeight}");
         }
 
-        private void StartGame()
-        {
+        private void StartGame() =>
             _profilePlayer.CurrentState.Value = GameState.Game;
-        }
 
         private void UpgradeWithEquippedItems(
             IUpgradable upgradable,
@@ -118,7 +105,7 @@ namespace Ui
 
             if (_appliedItems.Count > equippedItems.Count)
             {
-                var temp = _appliedItems.Except(equippedItems).ToList();
+                var temp = _appliedItems.Except(equippedItems).ToArray();
 
                 foreach (var itemId in temp)
                 {
@@ -133,16 +120,46 @@ namespace Ui
             
         }
         
-        private ShedView LoadView(Transform placeForUi)
+        
+        private InventoryController CreateInventoryController(Transform placeForUi) =>
+            new InventoryController(LoadInventoryView(placeForUi), _profilePlayer.Inventory, CreateInventoryItemRepository());
+    
+        private ItemsRepository CreateInventoryItemRepository()
         {
-            GameObject prefab = ResourcesLoader.LoadPrefab(_viewPath);
+            ItemConfig[] itemConfigs = ContentDataSourceLoader.LoadItemConfigs(_itemsConfigDataSourcePath);
+            var repository = new ItemsRepository(itemConfigs);
+            return repository;
+        }
+    
+        private IUpgradeHandlersRepository CreateUpgradeHandlersRepository()
+        {
+            UpgradeItemConfig[] upgradeConfigs = ContentDataSourceLoader.LoadUpgradeItemConfigs(_upgradeHandlersDataSourcePath);
+            var repository = new UpgradeHandlersRepository(upgradeConfigs);
+            return repository;
+        }
+
+        #region LoadViews
+        private ShedView LoadShedView(Transform placeForUi)
+        {
+            GameObject prefab = ResourcesLoader.LoadPrefab(_shedViewPath);
             GameObject objectView = Object.Instantiate(prefab, placeForUi);
             AddGameObject(objectView);
             
             return objectView.GetComponent<ShedView>();
         }
+    
+        private IInventoryView LoadInventoryView(Transform placeForUi)
+        {
+            GameObject prefab = ResourcesLoader.LoadPrefab(_invetoryViewPath);
+            GameObject objectView = Object.Instantiate(prefab, placeForUi);
+            AddGameObject(objectView);
+            
+            return objectView.GetComponent<InventoryView>();
+        }
+        #endregion        
 
         private void Log(string message) =>
             Debug.Log($"[{GetType().Name}]: {message}");
+        
     }
 }

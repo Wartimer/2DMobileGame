@@ -5,26 +5,20 @@ using UnityStandardAssets.CrossPlatformInput;
 
 namespace Game.InputLogic
 {
-    internal class InputJoystickView : BaseInputView, IPointerDownHandler, IPointerUpHandler, IDragHandler
+    internal sealed class InputJoystickView : BaseInputView, IPointerDownHandler, IPointerUpHandler, IDragHandler
     {
         [SerializeField] private Joystick _joystick;
         
         [SerializeField] private float _inputMultiplier = 10;
         
         private bool _usingJoystick;
-        
-        private void Start() =>
-            UpdateManager.SubscribeToUpdate(Move);
-
-        private void OnDestroy() =>
-            UpdateManager.UnsubscribeFromUpdate(Move);
 
         internal void SetJoystick(Joystick joystick)
         {
             _joystick = joystick;
         }
         
-        private void Move(float deltaTime)
+        protected override void Move(float deltaTime)
         {
             if (!_usingJoystick) return;
             

@@ -1,3 +1,4 @@
+using Ui;
 using Tool;
 using UnityEngine;
 using Scripts.Enums;
@@ -9,7 +10,7 @@ using Features.AbilitySystem;
 
 namespace Game
 {
-    internal class GameInitController : BaseController
+    internal class GameController : BaseController
     {
         private readonly ProfilePlayer _profilePlayer;
         private readonly SubscriptionProperty<float> _leftMoveDiff;
@@ -20,7 +21,7 @@ namespace Game
         private readonly TransportController _transportController;
         private readonly IAbilitiesController _abilitiesController;
         
-        public GameInitController(ProfilePlayer profilePlayer, AnalyticsManager analyticsManager, Transform placeForUi)
+        public GameController(ProfilePlayer profilePlayer, AnalyticsManager analyticsManager, Transform placeForUi)
         {
             _profilePlayer = profilePlayer;
             _leftMoveDiff = new SubscriptionProperty<float>();

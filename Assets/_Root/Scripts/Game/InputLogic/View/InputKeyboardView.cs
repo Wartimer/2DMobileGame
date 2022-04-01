@@ -5,20 +5,7 @@ namespace Game.InputLogic
 {
    internal sealed class InputKeyboardView : BaseInputView
    {
-        private void Start()
-        {
-            UpdateManager.SubscribeToUpdate(GetAxis);
-            UpdateManager.SubscribeToUpdate(GetKey);
-        }
-
-        private void OnDestroy()
-        {
-            UpdateManager.UnsubscribeFromUpdate(GetAxis);
-            UpdateManager.UnsubscribeFromUpdate(GetKey);
-        }
-
-
-        private void GetAxis(float deltaTime)
+        protected override void Move(float deltaTime)
         {
             float axisOffset = Input.GetAxis("Horizontal");
             float moveValue = _speed * deltaTime * axisOffset;
@@ -31,8 +18,5 @@ namespace Game.InputLogic
             else if (sign < 0)
                 OnLeftMove(abs);
         }
-
-
-
-    }
+   }
 }

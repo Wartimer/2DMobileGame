@@ -7,17 +7,17 @@ using UnityEngine;
 
 internal class EntryPoint : MonoBehaviour
 {
-    private const float CarSpeed = 15f;
-    private const float JumpHeight = 2f;
-    private const GameState InitialState = GameState.Start;
+    [Header("Settings")]
+    [SerializeField] GameState InitialState = GameState.Start;
 
+    [Header("Attachments")]
     [SerializeField] private Transform _placeForUi;
     [SerializeField] private AnalyticsManager _analyticsManager;
     [SerializeField] private UnityAdsService _unityAdsService;
     [SerializeField] private IAPService _iapService;
     [SerializeField] private ProductLibrary _productLibrary;
     
-    private GameStateController _gameStateController;
+    private MainController _mainController;
 
 
     private void Awake()
@@ -35,7 +35,7 @@ internal class EntryPoint : MonoBehaviour
         else _analyticsManager.IsInitialized += OnAnalyticsManagerInitialized;
         
         
-        _gameStateController = new GameStateController(_placeForUi, profilePlayer, _unityAdsService, _analyticsManager, _iapService, _productLibrary);
+        _mainController = new MainController(_placeForUi, profilePlayer, _unityAdsService, _analyticsManager, _iapService, _productLibrary);
     }
 
     private void OnIapInitialized()
@@ -57,7 +57,7 @@ internal class EntryPoint : MonoBehaviour
         
     private void OnDestroy()
     {
-        _gameStateController.Dispose();
+        _mainController.Dispose();
         _iapService.Initialized.RemoveListener(OnIapInitialized);
         _unityAdsService.Initialized.RemoveListener(OnAdsInitialized);
         _analyticsManager.IsInitialized -= OnAnalyticsManagerInitialized;

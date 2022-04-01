@@ -1,12 +1,15 @@
 using Ui;
 using Game;
-using Scripts.Enums;
-using Services.Ads;
-using Services.Analytics;
-using Services.IAP;
+using Inventory.Items;
 using UnityEngine;
+using Services.Ads;
+using Services.IAP;
+using Scripts.Enums;
+using Services.Analytics;
+using Shed.Upgrade;
+using Tool;
 
-internal class GameStateController : BaseController
+internal class MainController : BaseController
 {
     private readonly Transform _placeForUi;
     private readonly ProfilePlayer _profilePlayer;
@@ -15,21 +18,21 @@ internal class GameStateController : BaseController
     private SettingsMenuController _settingsMenuController;
     private CarSelectController _carSelectController;
     private ShedController _shedController;
+    private GameController _gameController;
     
-    private GameInitController _gameInitController;
     private AnalyticsManager _analyticsManager;
     private IAdsService _unityAdsService;
     private IIAPService _iapService;
     private ProductLibrary _productLibrary;
     private TransportType _transportType;
 
-    public GameStateController(
-                                Transform placeForUi, 
-                                ProfilePlayer profilePlayer, 
-                                IAdsService unityAdsService, 
-                                AnalyticsManager analyticsManager,
-                                IIAPService iapService,
-                                ProductLibrary productLibrary)
+    public MainController(
+                            Transform placeForUi, 
+                            ProfilePlayer profilePlayer, 
+                            IAdsService unityAdsService, 
+                            AnalyticsManager analyticsManager,
+                            IIAPService iapService,
+                            ProductLibrary productLibrary)
     {
         _placeForUi = placeForUi;
         _profilePlayer = profilePlayer;
@@ -37,6 +40,7 @@ internal class GameStateController : BaseController
         _analyticsManager = analyticsManager;
         _iapService = iapService;
         _productLibrary = productLibrary;
+        
         profilePlayer.CurrentState.SubscribeOnChange(OnChangeGameState);
         OnChangeGameState(_profilePlayer.CurrentState.Value);
     }
@@ -54,7 +58,7 @@ internal class GameStateController : BaseController
                 _settingsMenuController = new SettingsMenuController(_placeForUi, _profilePlayer);
                 break;
             case GameState.Game:
-                _gameInitController = new GameInitController(_profilePlayer, _analyticsManager, _placeForUi);
+                _gameController = new GameController(_profilePlayer, _analyticsManager, _placeForUi);
                 break;
             case GameState.SelectCar:
                 _carSelectController = new CarSelectController(_placeForUi, _profilePlayer);
@@ -67,11 +71,11 @@ internal class GameStateController : BaseController
                 break;
         }
     }
-
+    
     private void DisposeAllControllers()
     {
         _mainMenuController?.Dispose();
-        _gameInitController?.Dispose();
+        _gameController?.Dispose();
         _settingsMenuController?.Dispose();
         _carSelectController?.Dispose();
         _shedController?.Dispose();
@@ -79,9 +83,10 @@ internal class GameStateController : BaseController
     
     protected override void OnDispose()
     {
-        _mainMenuController?.Dispose();
-        _gameInitController?.Dispose();
-
         _profilePlayer.CurrentState.UnSubscribeOnChange(OnChangeGameState);
     }
+    
+
+
+
 }

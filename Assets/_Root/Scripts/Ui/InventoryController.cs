@@ -13,30 +13,26 @@ namespace Ui
 
     internal class InventoryController : BaseController, IInventoryController
     {
-        private readonly ResourcePath _viewPath = new ResourcePath("Prefabs/UI/InventoryView");
-        private readonly ResourcePath _dataSourcePath = new ResourcePath("Configs/Inventory/ItemConfigDataSource");
-        
         private readonly IInventoryView _view;
         private readonly IInventoryModel _model;
-        private readonly IItemsRepository _repository;
-
+        private readonly IItemsRepository _itemsRepository;
 
         public InventoryController(
-            [NotNull] Transform placeForUi,
-            [NotNull] IInventoryModel inventoryModel
+            [NotNull] IInventoryView view,
+            [NotNull] IInventoryModel inventoryModel,
+            [NotNull] IItemsRepository itemsRepository
             )
         {
-            if (placeForUi == null)
-                throw new ArgumentNullException(nameof(placeForUi));
             _model
                 = inventoryModel ?? throw new ArgumentNullException(nameof(inventoryModel));
             
-            _repository = CreateRepository();
+            _itemsRepository = itemsRepository ??
+                        throw new ArgumentNullException(nameof(itemsRepository));
 
-            _view = LoadView(placeForUi);
-            
+            _view = view ??
+                    throw new ArgumentNullException(nameof(view));
 
-            _view.Display(_repository.Items.Values, OnItemClicked);
+            _view.Display(_itemsRepository.Items.Values, OnItemClicked);
 
             foreach (string itemId in _model.EquippedItems)
                 _view.Select(itemId);
@@ -47,14 +43,7 @@ namespace Ui
             _view.Clear();
             base.OnDispose();
         }
-
-        private ItemsRepository CreateRepository()
-        {
-            ItemConfig[] itemConfigs = ContentDataSourceLoader.LoadItemConfigs(_dataSourcePath);
-            var repository = new ItemsRepository(itemConfigs);
-            return repository;
-        }
-
+        
         private void OnItemClicked(string itemId)
         {
             bool equipped = _model.IsEquipped(itemId);
@@ -63,14 +52,6 @@ namespace Ui
                 UnequipItem(itemId);
             else
                 EquipItem(itemId);
-        }
-
-        private InventoryView LoadView(Transform placeForUi)
-        {
-            GameObject prefab = ResourcesLoader.LoadPrefab(_viewPath);
-            GameObject objectView = Object.Instantiate(prefab, placeForUi);
-            AddGameObject(objectView);
-            return objectView.GetComponent<InventoryView>();
         }
         
         private void EquipItem(string itemId)
