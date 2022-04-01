@@ -1,4 +1,4 @@
-using Profile;
+using Scripts.Enums;
 using Tool;
 using UnityEngine;
 using Object = UnityEngine.Object;

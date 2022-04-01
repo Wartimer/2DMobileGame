@@ -1,3 +1,4 @@
+using System;
 using Tool;
 using UnityEngine;
 
@@ -5,6 +6,8 @@ namespace Game.InputLogic
 {
     internal abstract class BaseInputView : MonoBehaviour
     {
+        public event Action<KeyCode> KeyPressed;
+        
         private SubscriptionProperty<float> _leftMove;
         private SubscriptionProperty<float> _rightMove;
         protected float _speed;
@@ -25,5 +28,12 @@ namespace Game.InputLogic
 
         protected virtual void OnRightMove(float value) =>
             _rightMove.Value = value;
+        
+        protected void GetKey(float deltaTime)
+        {
+            if (Input.GetKey(KeyCode.UpArrow))
+                KeyPressed?.Invoke(KeyCode.UpArrow);
+        }    
+            
     }
 }

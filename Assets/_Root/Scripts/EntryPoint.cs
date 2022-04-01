@@ -1,4 +1,4 @@
-using Profile;
+using Scripts.Enums;
 using Services.Ads.UnityAds;
 using Services.Analytics;
 using Services.IAP;
@@ -8,6 +8,7 @@ using UnityEngine;
 internal class EntryPoint : MonoBehaviour
 {
     private const float CarSpeed = 15f;
+    private const float JumpHeight = 2f;
     private const GameState InitialState = GameState.Start;
 
     [SerializeField] private Transform _placeForUi;
@@ -21,7 +22,7 @@ internal class EntryPoint : MonoBehaviour
 
     private void Awake()
     {
-        var profilePlayer = new ProfilePlayer(CarSpeed, InitialState);
+        var profilePlayer = new ProfilePlayer(InitialState);
         
         if (_unityAdsService.IsInitialized) OnAdsInitialized();
         else _unityAdsService.Initialized.AddListener(OnAdsInitialized);

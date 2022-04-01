@@ -9,6 +9,7 @@ namespace Ui
     {
         [SerializeField] private Button _buttonBackToMainMenu;
         [SerializeField] private Button _startButton;
+        [SerializeField] private Button _buttonShed;
 
         [SerializeField] private Button _redCarButton;
         [SerializeField] private Button _schoolBusButton;
@@ -20,16 +21,25 @@ namespace Ui
         public void ReturnToMainMenuInit(UnityAction returnToMainMenu) =>
             _buttonBackToMainMenu.onClick.AddListener(returnToMainMenu);
         
+        public void OpenUpgradesInit(UnityAction openUpgrades) =>
+            _buttonShed.onClick.AddListener(openUpgrades);
+        
         public void StartGameInit(UnityAction startGame) =>
             _startButton.onClick.AddListener(startGame);
-
+        
         public void SelectRedCar(UnityAction selectRedCar) =>
             _redCarButton.onClick.AddListener(selectRedCar);
 
         public void SelectSchoolBus(UnityAction selectSchoolBus) =>
             _schoolBusButton.onClick.AddListener(selectSchoolBus);
         
-        public void OnDestroy() =>
+        public void OnDestroy()
+        { 
             _buttonBackToMainMenu.onClick.RemoveAllListeners();
+            _startButton.onClick.RemoveAllListeners();
+            _buttonShed.onClick.RemoveAllListeners();
+            _redCarButton.onClick.RemoveAllListeners();
+            _schoolBusButton.onClick.RemoveAllListeners();
+        }
     }
 }
