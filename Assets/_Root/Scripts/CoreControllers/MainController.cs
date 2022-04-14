@@ -13,6 +13,7 @@ internal class MainController : BaseController
 {
     private readonly ResourcePath _upgradeHandlersDataSourcePath = new ResourcePath("Configs/Upgrades/UpgradeItemConfigDataSource");
     private readonly ResourcePath _itemsConfigDataSourcePath = new ResourcePath("Configs/Inventory/ItemConfigDataSource");
+    private readonly ResourcePath _shedViewPath = new ResourcePath("Prefabs/UI/ShedView");
     private readonly ResourcePath _invetoryViewPath = new ResourcePath("Prefabs/UI/InventoryView");
     
     private readonly Transform _placeForUi;
@@ -68,10 +69,11 @@ internal class MainController : BaseController
                 _carSelectController = new CarSelectController(_placeForUi, _profilePlayer);
                 break;
             case GameState.Shed:
-                _shedController = new ShedController(_placeForUi, _profilePlayer, CreateUpgradeHandlersRepository(), CreateInventoryController(_placeForUi));
-                break;
-            default:
-                DisposeAllControllers();
+                _shedController = new ShedController(_placeForUi, 
+                                                     _profilePlayer, 
+                                                     CreateUpgradeHandlersRepository(),
+                                                     LoadShedView(_placeForUi),
+                                                     CreateInventoryController(_placeForUi));
                 break;
         }
     }
@@ -93,14 +95,23 @@ internal class MainController : BaseController
         return repository;
     }
     
+    private ShedView LoadShedView(Transform placeForUi)
+    {
+        GameObject prefab = ResourcesLoader.LoadPrefab(_shedViewPath);
+        GameObject objectView = Object.Instantiate(prefab, placeForUi);
+            
+        return objectView.GetComponent<ShedView>();
+    }
+    
     private InventoryView LoadInventoryView(Transform placeForUi)
     {
         GameObject prefab = ResourcesLoader.LoadPrefab(_invetoryViewPath);
         GameObject objectView = Object.Instantiate(prefab, placeForUi);
-        AddGameObject(objectView);
             
         return objectView.GetComponent<InventoryView>();
     }
+    
+    
     
     private void DisposeAllControllers()
     {
@@ -115,8 +126,4 @@ internal class MainController : BaseController
     {
         _profilePlayer.CurrentState.UnSubscribeOnChange(OnChangeGameState);
     }
-    
-
-
-
 }

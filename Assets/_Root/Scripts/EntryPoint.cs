@@ -1,3 +1,4 @@
+using Profile.GameSettings;
 using Scripts.Enums;
 using Services.Ads.UnityAds;
 using Services.Analytics;
@@ -8,7 +9,8 @@ using UnityEngine;
 internal class EntryPoint : MonoBehaviour
 {
     [Header("Settings")]
-    [SerializeField] GameState InitialState = GameState.Start;
+    [SerializeField] private GameStartSettings _gameStartSettings;
+    GameState _initialState;
 
     [Header("Attachments")]
     [SerializeField] private Transform _placeForUi;
@@ -22,7 +24,8 @@ internal class EntryPoint : MonoBehaviour
 
     private void Awake()
     {
-        var profilePlayer = new ProfilePlayer(InitialState);
+        _initialState = _gameStartSettings.GameState;
+        var profilePlayer = new ProfilePlayer(_initialState);
         
         if (_unityAdsService.IsInitialized) OnAdsInitialized();
         else _unityAdsService.Initialized.AddListener(OnAdsInitialized);

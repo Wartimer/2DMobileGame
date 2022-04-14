@@ -29,7 +29,7 @@ namespace Ui
             _view = view ??
                     throw new ArgumentNullException(nameof(view));
             
-            AddGameObject(_view.InventoryGameObject);
+            AddGameObject(_view.GameObject);
             
             _view.Display(_itemsRepository.Items.Values, OnItemClicked);
 

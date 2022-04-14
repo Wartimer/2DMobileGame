@@ -17,9 +17,6 @@ namespace Ui
 
     internal class ShedController : BaseController, IShedController
     {
-        
-        private readonly ResourcePath _shedViewPath = new ResourcePath("Prefabs/UI/ShedView");
-        
         private readonly ShedView _shedView;
         private readonly ProfilePlayer _profilePlayer;
         private readonly BaseController _inventoryController;
@@ -30,6 +27,7 @@ namespace Ui
             [NotNull] Transform placeForUi,
             [NotNull] ProfilePlayer profilePlayer,
             [NotNull] IUpgradeHandlersRepository repository,
+            [NotNull] ShedView shedView,
             [NotNull] BaseController inventoryController)
         {
             if (placeForUi == null)
@@ -44,7 +42,9 @@ namespace Ui
             _inventoryController = inventoryController ?? throw new ArgumentNullException(nameof(inventoryController));
             AddController(_inventoryController);
 
-            _shedView = LoadShedView(placeForUi);
+            _shedView = shedView;
+            AddGameObject(shedView.gameObject);
+            
             _shedView.Init(Apply, Close, StartGame);
         }
 
@@ -118,22 +118,6 @@ namespace Ui
             }
             
         }
-        
-        
-        
-
-        #region LoadViews
-        private ShedView LoadShedView(Transform placeForUi)
-        {
-            GameObject prefab = ResourcesLoader.LoadPrefab(_shedViewPath);
-            GameObject objectView = Object.Instantiate(prefab, placeForUi);
-            AddGameObject(objectView);
-            
-            return objectView.GetComponent<ShedView>();
-        }
-    
-
-        #endregion        
 
         private void Log(string message) =>
             Debug.Log($"[{GetType().Name}]: {message}");
