@@ -11,7 +11,7 @@ namespace Ui
         void Clear();
         void Select(string id);
         void Unselect(string id);
-        GameObject InventoryGameObject { get; }
+        GameObject GameObject { get; }
     }
 
     internal class InventoryView : MonoBehaviour, IInventoryView
@@ -21,7 +21,7 @@ namespace Ui
 
         private readonly Dictionary<string, ItemView> _itemViews = new Dictionary<string, ItemView>();
 
-        public GameObject InventoryGameObject => gameObject;
+        public GameObject GameObject => gameObject;
 
         private void OnDestroy() => Clear();
 
