@@ -27,8 +27,8 @@ namespace Ui
             [NotNull] Transform placeForUi,
             [NotNull] ProfilePlayer profilePlayer,
             [NotNull] IUpgradeHandlersRepository repository,
-            [NotNull] ShedView shedView,
-            [NotNull] BaseController inventoryController)
+            [NotNull] BaseController inventoryController,
+            [NotNull] ShedView shedView )
         {
             if (placeForUi == null)
                 throw new ArgumentNullException(nameof(placeForUi));
