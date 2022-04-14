@@ -18,21 +18,19 @@ namespace Ui
     internal class ShedController : BaseController, IShedController
     {
         
-        private readonly ResourcePath _upgradeHandlersDataSourcePath = new ResourcePath("Configs/Upgrades/UpgradeItemConfigDataSource");
-        private readonly ResourcePath _itemsConfigDataSourcePath = new ResourcePath("Configs/Inventory/ItemConfigDataSource");
-        private readonly ResourcePath _invetoryViewPath = new ResourcePath("Prefabs/UI/InventoryView");
         private readonly ResourcePath _shedViewPath = new ResourcePath("Prefabs/UI/ShedView");
         
         private readonly ShedView _shedView;
-        private readonly IInventoryView _inventoryView;
         private readonly ProfilePlayer _profilePlayer;
-        private readonly IInventoryController _inventoryController;
+        private readonly BaseController _inventoryController;
         private readonly IUpgradeHandlersRepository _upgradeHandlersRepository;
         private readonly List<string> _appliedItems = new List<string>();
 
         public ShedController(
             [NotNull] Transform placeForUi,
-            [NotNull] ProfilePlayer profilePlayer)
+            [NotNull] ProfilePlayer profilePlayer,
+            [NotNull] IUpgradeHandlersRepository repository,
+            [NotNull] BaseController inventoryController)
         {
             if (placeForUi == null)
                 throw new ArgumentNullException(nameof(placeForUi));
@@ -40,11 +38,11 @@ namespace Ui
             _profilePlayer
                 = profilePlayer ?? throw new ArgumentNullException(nameof(profilePlayer));
 
-            _upgradeHandlersRepository = CreateUpgradeHandlersRepository();
+            _upgradeHandlersRepository = repository ?? throw new ArgumentNullException(nameof(repository));
             AddRepository(_upgradeHandlersRepository);
             
-            _inventoryController = CreateInventoryController(placeForUi);
-            AddController(_inventoryController as BaseController);
+            _inventoryController = inventoryController ?? throw new ArgumentNullException(nameof(inventoryController));
+            AddController(_inventoryController);
 
             _shedView = LoadShedView(placeForUi);
             _shedView.Init(Apply, Close, StartGame);
@@ -53,6 +51,7 @@ namespace Ui
         protected override void OnDispose()
         {
             _shedView.Deinit();
+            DisposeDisposables();
             base.OnDispose();
         }
 
@@ -121,22 +120,7 @@ namespace Ui
         }
         
         
-        private InventoryController CreateInventoryController(Transform placeForUi) =>
-            new InventoryController(LoadInventoryView(placeForUi), _profilePlayer.Inventory, CreateInventoryItemRepository());
-    
-        private ItemsRepository CreateInventoryItemRepository()
-        {
-            ItemConfig[] itemConfigs = ContentDataSourceLoader.LoadItemConfigs(_itemsConfigDataSourcePath);
-            var repository = new ItemsRepository(itemConfigs);
-            return repository;
-        }
-    
-        private IUpgradeHandlersRepository CreateUpgradeHandlersRepository()
-        {
-            UpgradeItemConfig[] upgradeConfigs = ContentDataSourceLoader.LoadUpgradeItemConfigs(_upgradeHandlersDataSourcePath);
-            var repository = new UpgradeHandlersRepository(upgradeConfigs);
-            return repository;
-        }
+        
 
         #region LoadViews
         private ShedView LoadShedView(Transform placeForUi)
@@ -148,14 +132,7 @@ namespace Ui
             return objectView.GetComponent<ShedView>();
         }
     
-        private IInventoryView LoadInventoryView(Transform placeForUi)
-        {
-            GameObject prefab = ResourcesLoader.LoadPrefab(_invetoryViewPath);
-            GameObject objectView = Object.Instantiate(prefab, placeForUi);
-            AddGameObject(objectView);
-            
-            return objectView.GetComponent<InventoryView>();
-        }
+
         #endregion        
 
         private void Log(string message) =>

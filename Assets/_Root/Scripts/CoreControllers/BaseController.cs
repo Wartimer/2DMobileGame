@@ -24,7 +24,7 @@ internal abstract class BaseController : IDisposable
         OnDispose();
     }
 
-    private void DisposeDisposables()
+    protected void DisposeDisposables()
     {
         if (_disposables == null)
             return;
