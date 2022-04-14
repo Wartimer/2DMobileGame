@@ -23,27 +23,6 @@ namespace Game.Transport
         {
             _wheelsRotator = new WheelsRotator(_view, leftMove, rightMove);
             _inputView = inputView;
-            _inputView.KeyPressed += OnKeyPressed;
         }
-
-        private void OnKeyPressed(KeyCode key)
-        {
-            if (key == KeyCode.UpArrow && IsGrounded())
-            {
-                _view.RigidBody.velocity = Vector2.up * TransportModel.JumpHeight;
-            }
-        }
-
-        private bool IsGrounded()
-        {
-            return _view.IsGrounded();
-        }
-
-        protected override void OnDispose()
-        {
-            _inputView.KeyPressed -= OnKeyPressed;
-        }
-        
-
     }
 }
