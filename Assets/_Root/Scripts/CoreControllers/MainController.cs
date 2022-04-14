@@ -72,8 +72,8 @@ internal class MainController : BaseController
                 _shedController = new ShedController(_placeForUi, 
                                                      _profilePlayer, 
                                                      CreateUpgradeHandlersRepository(),
-                                                     LoadShedView(_placeForUi),
-                                                     CreateInventoryController(_placeForUi));
+                                                     CreateInventoryController(_placeForUi),
+                                                     LoadShedView(_placeForUi));
                 break;
         }
     }
@@ -110,9 +110,7 @@ internal class MainController : BaseController
             
         return objectView.GetComponent<InventoryView>();
     }
-    
-    
-    
+
     private void DisposeAllControllers()
     {
         _mainMenuController?.Dispose();
