@@ -587,6 +587,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8c1f1f3a311c471e921b56ebcc0f1a0c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  _gameStartSettings: {fileID: 11400000, guid: db192ff52808f074d88aa50d69ba5fae, type: 2}
   _placeForUi: {fileID: 1903552}
   _analyticsManager: {fileID: 2034370890}
   _unityAdsService: {fileID: 624176137}

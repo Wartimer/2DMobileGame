@@ -1,9 +1,6 @@
 using System;
 using Inventory.Items;
 using JetBrains.Annotations;
-using Tool;
-using UnityEngine;
-using Object = UnityEngine.Object;
 
 namespace Ui
 {
@@ -31,7 +28,9 @@ namespace Ui
 
             _view = view ??
                     throw new ArgumentNullException(nameof(view));
-
+            
+            AddGameObject(_view.GameObject);
+            
             _view.Display(_itemsRepository.Items.Values, OnItemClicked);
 
             foreach (string itemId in _model.EquippedItems)
