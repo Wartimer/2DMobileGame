@@ -13,30 +13,31 @@ namespace Game.Transport
         
         internal Rigidbody2D RigidBody => _rigidbody;
         internal Collider2D Collider => _collider;
-
         internal LayerMask Layer => _layerMask;
         
         private void Awake()
         {
-            _rigidbody = GetComponent<Rigidbody2D>();
-            _collider = GetComponent<Collider2D>();
+            TryGetOrAddRigidBody();
+            AddOrGetCollider();
         }
 
         public virtual void Init(ISubscriptionProperty<float> diff) =>
-            _diff = diff;   
-        
-        internal bool IsGrounded()
+            _diff = diff;
+
+        private void TryGetOrAddRigidBody()
         {
-            float extraHeightText = 0.1f;
-            var colliderBounds = Collider.bounds;
-            RaycastHit2D raycastHit = Physics2D.Raycast(Collider.bounds.center, Vector2.down, Collider.bounds.extents.y + extraHeightText, _layerMask);
-            Color rayColor;
-            if (raycastHit.collider != null) rayColor = Color.green;
-            else rayColor = Color.red;
-            
-            Debug.DrawRay(Collider.bounds.center, Vector2.down * (Collider.bounds.extents.y + extraHeightText), rayColor);
-            Debug.Log(raycastHit.collider);
-            return raycastHit.collider != null;
+            if (TryGetComponent(out Rigidbody2D rigidBody))
+                _rigidbody = rigidBody;
+            else
+                gameObject.AddComponent<Rigidbody2D>();
+        }
+
+        private void AddOrGetCollider()
+        {
+            if (TryGetComponent(out Collider2D objectCollider))
+                _collider = objectCollider;
+            else
+                gameObject.AddComponent<Collider2D>();
         }
     }
 }

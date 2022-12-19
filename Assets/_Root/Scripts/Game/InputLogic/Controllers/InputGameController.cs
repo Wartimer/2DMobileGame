@@ -18,7 +18,9 @@ namespace Game.InputLogic
             TransportModel transport)
         {
             if(Application.platform == RuntimePlatform.WindowsEditor ||
-               Application.platform == RuntimePlatform.WindowsPlayer)
+               Application.platform == RuntimePlatform.WindowsPlayer || 
+               Application.platform == RuntimePlatform.OSXPlayer ||
+                Application.platform == RuntimePlatform.OSXEditor)
                 _view = LoadView(_pcInputPath);
             
             else _view = LoadView(_joysticInputPath);

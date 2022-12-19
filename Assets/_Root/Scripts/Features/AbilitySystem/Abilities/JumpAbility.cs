@@ -14,9 +14,10 @@ namespace Features.AbilitySystem
 
         public void Apply(IAbilityActivator activator)
         {
-            var rb = activator.GameObjectView.GetComponent<TransportView>().RigidBody;
-            var col = activator.GameObjectView.GetComponent<TransportView>().Collider;
-            var mask = activator.GameObjectView.GetComponent<TransportView>().Layer;
+            var transportView = activator.GameObjectView.GetComponent<TransportView>();
+            var rb = transportView.RigidBody;
+            var col = transportView.Collider;
+            var mask = transportView.Layer;
             if(IsGrounded(col, mask))
                 rb.velocity = Vector2.up * activator.JumpHeight;
         }
@@ -25,15 +26,20 @@ namespace Features.AbilitySystem
         {
             float extraHeightText = 0.1f;
             var colliderBounds = collider.bounds;
-            RaycastHit2D raycastHit = Physics2D.Raycast(colliderBounds.center, Vector2.down, colliderBounds.extents.y + extraHeightText, layerMask);
+            var rayDistance = colliderBounds.extents.y + extraHeightText;
+            RaycastHit2D raycastHit = Physics2D.Raycast(colliderBounds.center, Vector2.down, rayDistance, layerMask);
+            DrawDebugRay(raycastHit, colliderBounds, rayDistance);
+            return raycastHit.collider != null;
+        }
+
+        private void DrawDebugRay(RaycastHit2D raycastHit, Bounds colliderBounds, float rayDistance)
+        {
             Color rayColor;
             if (raycastHit.collider != null) rayColor = Color.green;
             else rayColor = Color.red;
-            
-            Debug.DrawRay(colliderBounds.center, Vector2.down * (colliderBounds.extents.y + extraHeightText), rayColor);
+
+            Debug.DrawRay(colliderBounds.center, Vector2.down * rayDistance, rayColor);
             Debug.Log(raycastHit.collider);
-            return raycastHit.collider != null;
         }
-        
     }
 }
